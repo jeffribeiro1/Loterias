@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loterias CAIXA - Histórico Completo com Casas Lotéricas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #0066b3;
+            --primary-dark: #004a80;
+            --secondary: #f7a600;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .tab:hover {
+            background-color: rgba(0, 102, 179, 0.05);
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Card */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .select-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        select, input, button {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e69500;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            width: auto;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 102, 179, 0.1);
+        }
+
+        /* Results Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(0, 102, 179, 0.05);
+        }
+
+        .number-ball {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .mega {
+            background-color: #209869;
+        }
+
+        .quina {
+            background-color: #260085;
+        }
+
+        .lotofacil {
+            background-color: #930089;
+        }
+
+        .lotomania {
+            background-color: #F78100;
+        }
+
+        .timemania {
+            background-color: #02A64D;
+        }
+
+        .duplasena {
+            background-color: #A6151A;
+        }
+
+        /* Detalhes dos Ganhadores */
+        .winners-details {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .winners-details.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .winners-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .winners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .winner-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+        }
+
+        .winner-card.prize {
+            background-color: #fff8e1;
+            border-color: #ffecb3;
+        }
+
+        .winner-location {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .winner-prize {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 1.2rem;
+            margin: 0.75rem 0;
+        }
+
+        .lottery-house-info {
+            background-color: #f0f8ff;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .house-name {
+            font-weight: bold;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .house-address {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .house-contact {
+            font-size: 0.85rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .no-winners {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .frequency-list {
+            list-style: none;
+        }
+
+        .frequency-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .frequency-number {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .frequency-bar {
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        /* Generated Games */
+        .games-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 1.5rem;
+        }
+
+        .game-card {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            flex: 1;
+            min-width: 250px;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Tab de Casas Lotéricas */
+        .lottery-houses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .house-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            border-top: 4px solid var(--secondary);
+        }
+
+        .house-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .house-id {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .house-wins {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .house-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #f5f5f5;
+            border-radius: var(--border-radius);
+            flex: 1;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .stats-grid, .winners-grid, .lottery-houses-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .games-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <div>
+                        <h1>Loterias CAIXA</h1>
+                        <p>Histórico Completo com Casas Lotéricas Ganhadoras</p>
+                    </div>
+                </div>
+                <div class="last-update">
+                    <p><i class="fas fa-sync-alt"></i> Atualizado em: <span id="update-date">15/10/2023</span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="history">Histórico de Concursos</div>
+            <div class="tab" data-tab="statistics">Números Mais Sorteados</div>
+            <div class="tab" data-tab="winners">Ganhadores por Estado</div>
+            <div class="tab" data-tab="lottery-houses">Casas Lotéricas Ganhadoras</div>
+            <div class="tab" data-tab="generator">Gerador de Jogos</div>
+        </div>
+
+        <!-- Tab 1: History -->
+        <div class="tab-content active" id="history">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Consultar Concursos Anteriores</h2>
+                </div>
+                
+                <div class="controls">
+                    <div class="select-group">
+                        <label for="lottery-type">Tipo de Loteria:</label>
+                        <select id="lottery-type">
+                            <option value="mega-sena">Mega-Sena</option>
+                            <option value="quina">Quina</option>
+                            <option value="lotofacil">Lotofácil</option>
+                            <option value="lotomania">Lotomania</option>
+                            <option value="timemania">Timemania</option>
+                            <option value="dupla-sena">Dupla Sena</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="contest-quantity">Quantidade de Concursos:</label>
+                        <select id="contest-quantity">
+                            <option value="5">Últimos 5 concursos</option>
+                            <option value="10" selected>Últimos 10 concursos</option>
+                            <option value="20">Últimos 20 concursos</option>
+                            <option value="50">Últimos 50 concursos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="specific-contest">Concurso Específico (opcional):</label>
+                        <input type="number" id="specific-contest" placeholder="Ex: 2650">
+                    </div>
+                    
+                    <div class="select-group" style="align-self: flex-end;">
+                        <button id="search-button">
+                            <i class="fas fa-search"></i> Buscar Concursos
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Concurso</th>
+                                <th>Data</th>
+                                <th>Números Sorteados</th>
+                                <th>Ganhadores</th>
+                                <th>Prêmio</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Resultados serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Área para detalhes dos ganhadores -->
+                <div id="winners-details-container">
+                    <!-- Detalhes serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Statistics -->
+        <div class="tab-content" id="statistics">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Estatísticas e Frequência de Números</h2>
+                    <button class="btn-secondary" id="update-stats">
+                        <i class="fas fa-chart-line"></i> Atualizar Estatísticas
+                    </button>
+                </div>
+                
+                <div class="controls">
+                    <div class="select-group">
+                        <label for="stats-lottery-type">Tipo de Loteria para Análise:</label>
+                        <select id="stats-lottery-type">
+                            <option value="mega-sena">Mega-Sena</option>
+                            <option value="quina">Quina</option>
+                            <option value="lotofacil">Lotofácil</option>
+                            <option value="lotomania">Lotomania</option>
+                            <option value="timemania">Timemania</option>
+                            <option value="dupla-sena">Dupla Sena</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="stats-period">Período de Análise:</label>
+                        <select id="stats-period">
+                            <option value="30">Últimos 30 concursos</option>
+                            <option value="100" selected>Últimos 100 concursos</option>
+                            <option value="500">Últimos 500 concursos</option>
+                            <option value="all">Todos os concursos</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="stats-results">
+                    <div class="stats-grid">
+                        <!-- Estatísticas serão inseridas aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Winners by State -->
+        <div class="tab-content" id="winners">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Distribuição de Ganhadores por Estado</h2>
+                </div>
+                
+                <div class="controls">
+                    <div class="select-group">
+                        <label for="winners-lottery-type">Tipo de Loteria:</label>
+                        <select id="winners-lottery-type">
+                            <option value="mega-sena">Mega-Sena</option>
+                            <option value="quina">Quina</option>
+                            <option value="lotofacil">Lotofácil</option>
+                            <option value="lotomania">Lotomania</option>
+                            <option value="timemania">Timemania</option>
+                            <option value="dupla-sena">Dupla Sena</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="winners-period">Período:</label>
+                        <select id="winners-period">
+                            <option value="30">Últimos 30 dias</option>
+                            <option value="90" selected>Últimos 90 dias</option>
+                            <option value="180">Últimos 6 meses</option>
+                            <option value="365">Último ano</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group" style="align-self: flex-end;">
+                        <button id="load-winners">
+                            <i class="fas fa-users"></i> Carregar Dados
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="winners-by-state">
+                    <!-- Mapa e dados de ganhadores por estado serão inseridos aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Lottery Houses -->
+        <div class="tab-content" id="lottery-houses">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Casas Lotéricas com Mais Ganhadores</h2>
+                </div>
+                
+                <div class="controls">
+                    <div class="select-group">
+                        <label for="houses-lottery-type">Tipo de Loteria:</label>
+                        <select id="houses-lottery-type">
+                            <option value="mega-sena">Mega-Sena</option>
+                            <option value="quina">Quina</option>
+                            <option value="lotofacil">Lotofácil</option>
+                            <option value="lotomania">Lotomania</option>
+                            <option value="timemania">Timemania</option>
+                            <option value="dupla-sena">Dupla Sena</option>
+                            <option value="all" selected>Todas as Loterias</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="houses-period">Período:</label>
+                        <select id="houses-period">
+                            <option value="30">Últimos 30 dias</option>
+                            <option value="90" selected>Últimos 90 dias</option>
+                            <option value="180">Últimos 6 meses</option>
+                            <option value="365">Último ano</option>
+                            <option value="all">Todos os tempos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group" style="align-self: flex-end;">
+                        <button id="load-houses">
+                            <i class="fas fa-store"></i> Buscar Casas
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="lottery-houses-results">
+                    <!-- Casas lotéricas serão inseridas aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Generator -->
+        <div class="tab-content" id="generator">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Gerador de Jogos Baseado em Estatísticas</h2>
+                </div>
+                
+                <div class="controls">
+                    <div class="select-group">
+                        <label for="gen-lottery-type">Tipo de Loteria:</label>
+                        <select id="gen-lottery-type">
+                            <option value="mega-sena">Mega-Sena</option>
+                            <option value="quina">Quina</option>
+                            <option value="lotofacil">Lotofácil</option>
+                            <option value="lotomania">Lotomania</option>
+                            <option value="timemania">Timemania</option>
+                            <option value="dupla-sena">Dupla Sena</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="game-quantity">Quantidade de Jogos:</label>
+                        <select id="game-quantity">
+                            <option value="1">1 jogo</option>
+                            <option value="3" selected>3 jogos</option>
+                            <option value="5">5 jogos</option>
+                            <option value="10">10 jogos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label for="gen-strategy">Estratégia:</label>
+                        <select id="gen-strategy">
+                            <option value="frequent">Números mais frequentes</option>
+                            <option value="less-frequent">Números menos frequentes</option>
+                            <option value="mixed">Mistura de frequentes e raros</option>
+                            <option value="random">Aleatório puro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-group" style="align-self: flex-end;">
+                        <button id="generate-games">
+                            <i class="fas fa-dice"></i> Gerar Jogos
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="generated-games">
+                    <!-- Jogos gerados serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <div>
+                        <h3>Loterias CAIXA - Histórico Completo</h3>
+                        <p>Site não oficial para consulta e análise de dados</p>
+                    </div>
+                </div>
+                <p class="disclaimer">
+                    <i class="fas fa-exclamation-circle"></i> Este site é apenas para fins informativos e de entretenimento. 
+                    Não temos qualquer vínculo com a CAIXA Econômica Federal. 
+                    Os dados apresentados são simulados e não representam informações oficiais.
+                    Jogue com responsabilidade.
+                </p>
+                <p>© 2023 - Desenvolvido para fins educacionais</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dados de exemplo para simular uma API
+        const lotteryData = {
+            "mega-sena": {
+                name: "Mega-Sena",
+                maxNumber: 60,
+                numbersPerGame: 6,
+                colorClass: "mega",
+                contests: []
+            },
+            "quina": {
+                name: "Quina",
+                maxNumber: 80,
+                numbersPerGame: 5,
+                colorClass: "quina",
+                contests: []
+            },
+            "lotofacil": {
+                name: "Lotofácil",
+                maxNumber: 25,
+                numbersPerGame: 15,
+                colorClass: "lotofacil",
+                contests: []
+            },
+            "lotomania": {
+                name: "Lotomania",
+                maxNumber: 100,
+                numbersPerGame: 50,
+                colorClass: "lotomania",
+                contests: []
+            },
+            "timemania": {
+                name: "Timemania",
+                maxNumber: 80,
+                numbersPerGame: 10,
+                colorClass: "timemania",
+                contests: []
+            },
+            "dupla-sena": {
+                name: "Dupla Sena",
+                maxNumber: 50,
+                numbersPerGame: 6,
+                colorClass: "duplasena",
+                contests: []
+            }
+        };
+
+        // Estados brasileiros para dados de ganhadores
+        const brazilianStates = [
+            "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", 
+            "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", 
+            "RS", "RO", "RR", "SC", "SP", "SE", "TO"
+        ];
+
+        // Cidades por estado (exemplos)
+        const citiesByState = {
+            "SP": ["São Paulo", "Campinas", "Santos", "Ribeirão Preto", "Sorocaba", "São José dos Campos", "São Bernardo do Campo", "Guarulhos"],
+            "RJ": ["Rio de Janeiro", "Niterói", "Petrópolis", "Campos dos Goytacazes", "Duque de Caxias", "Nova Iguaçu"],
+            "MG": ["Belo Horizonte", "Uberlândia", "Juiz de Fora", "Montes Claros", "Contagem", "Betim"],
+            "RS": ["Porto Alegre", "Caxias do Sul", "Pelotas", "Santa Maria", "Canoas", "Novo Hamburgo"],
+            "PR": ["Curitiba", "Londrina", "Maringá", "Ponta Grossa", "Cascavel", "Foz do Iguaçu"],
+            "SC": ["Florianópolis", "Joinville", "Blumenau", "Chapecó", "São José", "Criciúma"],
+            "BA": ["Salvador", "Feira de Santana", "Vitória da Conquista", "Camaçari", "Juazeiro", "Ilhéus"],
+            "PE": ["Recife", "Olinda", "Caruaru", "Petrolina", "Jaboatão dos Guararapes", "Paulista"],
+            "CE": ["Fortaleza", "Juazeiro do Norte", "Sobral", "Crato", "Maracanaú", "Caucaia"],
+            "GO": ["Goiânia", "Anápolis", "Aparecida de Goiânia", "Rio Verde", "Águas Lindas de Goiás", "Luziânia"]
+        };
+
+        // Nomes de casas lotéricas
+        const lotteryHouseNames = [
+            "Loterica São Paulo", "Loterica do Centro", "Loterica da Sorte", "Loterica Esperança", 
+            "Loterica Bela Vista", "Loterica Central", "Loterica Boa Sorte", "Loterica Prêmio Grande",
+            "Loterica Fortuna", "Loterica Diamante", "Loterica Ouro", "Loterica Estrela",
+            "Loterica Campeã", "Loterica Milionária", "Loterica Vitória", "Loterica Feliz",
+            "Loterica Sol", "Loterica Lua", "Loterica Aurora", "Loterica Paraíso"
+        ];
+
+        // Tipos de logradouro
+        const streetTypes = ["Rua", "Avenida", "Praça", "Travessa", "Alameda", "Viela", "Estrada"];
+
+        // Nomes de ruas
+        const streetNames = [
+            "São João", "Brasil", "Paulista", "Copacabana", "Ipanema", "Nove de Julho", "Vinte e Cinco de Março",
+            "Consolação", "Republica", "Independência", "Liberdade", "Tiradentes", "Dom Pedro", "XV de Novembro",
+            "Sete de Setembro", "Getúlio Vargas", "Juscelino Kubitschek", "Castelo Branco", "Marechal Deodoro"
+        ];
+
+        // Cache para casas lotéricas
+        const lotteryHousesCache = {};
+
+        // Gerar uma casa lotérica aleatória para uma cidade/estado
+        function generateLotteryHouse(city, state) {
+            const key = `${city}-${state}`;
+            
+            if (lotteryHousesCache[key]) {
+                return lotteryHousesCache[key];
+            }
+            
+            const houseName = lotteryHouseNames[Math.floor(Math.random() * lotteryHouseNames.length)];
+            const streetType = streetTypes[Math.floor(Math.random() * streetTypes.length)];
+            const streetName = streetNames[Math.floor(Math.random() * streetNames.length)];
+            const number = Math.floor(Math.random() * 1000) + 1;
+            const neighborhood = "Centro";
+            
+            // Gerar telefone
+            const areaCode = getAreaCodeByState(state);
+            const phone1 = Math.floor(Math.random() * 9000) + 1000;
+            const phone2 = Math.floor(Math.random() * 9000) + 1000;
+            const phone = `(${areaCode}) ${phone1}-${phone2}`;
+            
+            // Gerar CNPJ fictício
+            const cnpj = `${Math.floor(Math.random() * 90) + 10}.${Math.floor(Math.random() * 900) + 100}.${Math.floor(Math.random() * 900) + 100}/0001-${Math.floor(Math.random() * 90) + 10}`;
+            
+            // Gerar código da casa (fictício)
+            const houseCode = `LH${Math.floor(Math.random() * 90000) + 10000}`;
+            
+            const house = {
+                id: houseCode,
+                name: `${houseName} - ${city}`,
+                address: `${streetType} ${streetName}, ${number} - ${neighborhood}`,
+                city: city,
+                state: state,
+                phone: phone,
+                cnpj: cnpj,
+                wins: 0,
+                totalPrize: 0,
+                firstWin: null,
+                lastWin: null
+            };
+            
+            lotteryHousesCache[key] = house;
+            return house;
+        }
+
+        // Obter código de área por estado
+        function getAreaCodeByState(state) {
+            const areaCodes = {
+                "SP": "11", "RJ": "21", "MG": "31", "RS": "51", "PR": "41",
+                "SC": "48", "BA": "71", "PE": "81", "CE": "85", "GO": "62",
+                "DF": "61", "ES": "27", "AM": "92", "PA": "91", "MT": "65",
+                "MS": "67", "RN": "84", "AL": "82", "SE": "79", "TO": "63",
+                "RO": "69", "AC": "68", "AP": "96", "RR": "95", "PI": "86",
+                "MA": "98", "PB": "83"
+            };
+            return areaCodes[state] || "11";
+        }
+
+        // Gerar dados históricos fictícios para cada loteria
+        function generateMockData() {
+            const today = new Date();
+            
+            // Primeiro, gerar casas lotéricas por cidade
+            const lotteryHousesByCity = {};
+            
+            for (const state in citiesByState) {
+                citiesByState[state].forEach(city => {
+                    // Gerar 1-3 casas lotéricas por cidade
+                    const numHouses = Math.floor(Math.random() * 3) + 1;
+                    lotteryHousesByCity[`${city}-${state}`] = [];
+                    
+                    for (let i = 0; i < numHouses; i++) {
+                        lotteryHousesByCity[`${city}-${state}`].push(generateLotteryHouse(city, state));
+                    }
+                });
+            }
+            
+            for (const lottery in lotteryData) {
+                const lotto = lotteryData[lottery];
+                const contests = [];
+                const totalContests = 200;
+                
+                // Gerar frequência base para os números
+                const baseFrequency = {};
+                for (let i = 1; i <= lotto.maxNumber; i++) {
+                    baseFrequency[i] = Math.floor(Math.random() * 30) + 10;
+                }
+                
+                // Gerar concursos
+                for (let i = totalContests; i > 0; i--) {
+                    const contestDate = new Date(today);
+                    contestDate.setDate(contestDate.getDate() - i * 2);
+                    
+                    // Sortear números baseados na frequência
+                    const numbersPool = Object.keys(baseFrequency);
+                    const drawnNumbers = [];
+                    
+                    while (drawnNumbers.length < lotto.numbersPerGame) {
+                        const randomIndex = Math.floor(Math.random() * numbersPool.length);
+                        const num = parseInt(numbersPool[randomIndex]);
+                        
+                        if (!drawnNumbers.includes(num)) {
+                            drawnNumbers.push(num);
+                            baseFrequency[num] += 1;
+                        }
+                    }
+                    
+                    // Ordenar números
+                    drawnNumbers.sort((a, b) => a - b);
+                    
+                    // Gerar número de ganhadores (maioria sem ganhadores)
+                    const hasWinners = Math.random() > 0.7;
+                    let winners = 0;
+                    let winnersDetails = [];
+                    
+                    if (hasWinners) {
+                        winners = Math.floor(Math.random() * 5) + 1;
+                        
+                        // Gerar detalhes dos ganhadores
+                        for (let w = 0; w < winners; w++) {
+                            // Selecionar estado aleatório
+                            const state = brazilianStates[Math.floor(Math.random() * brazilianStates.length)];
+                            // Selecionar cidade baseada no estado
+                            const cities = citiesByState[state] || ["Cidade não especificada"];
+                            const city = cities[Math.floor(Math.random() * cities.length)];
+                            
+                            // Selecionar uma casa lotérica para essa cidade
+                            const cityKey = `${city}-${state}`;
+                            let house = null;
+                            
+                            if (lotteryHousesByCity[cityKey] && lotteryHousesByCity[cityKey].length > 0) {
+                                house = lotteryHousesByCity[cityKey][Math.floor(Math.random() * lotteryHousesByCity[cityKey].length)];
+                                
+                                // Atualizar estatísticas da casa
+                                house.wins += 1;
+                                house.totalPrize += 1000000 + Math.random() * 50000000;
+                                if (!house.firstWin) house.firstWin = contestDate;
+                                house.lastWin = contestDate;
+                            } else {
+                                // Criar uma casa se não existir
+                                house = generateLotteryHouse(city, state);
+                                house.wins = 1;
+                                house.totalPrize = 1000000 + Math.random() * 50000000;
+                                house.firstWin = contestDate;
+                                house.lastWin = contestDate;
+                                if (!lotteryHousesByCity[cityKey]) lotteryHousesByCity[cityKey] = [];
+                                lotteryHousesByCity[cityKey].push(house);
+                            }
+                            
+                            // Valor do prêmio (divide o prêmio principal entre os ganhadores)
+                            const prizeValue = 1000000 + Math.random() * 50000000;
+                            const individualPrize = prizeValue / winners;
+                            
+                            winnersDetails.push({
+                                id: w + 1,
+                                city: city,
+                                state: state,
+                                prize: individualPrize,
+                                lotteryHouse: house,
+                                ticketType: generateRandomTicketType(),
+                                ticketChannel: generateRandomTicketChannel()
+                            });
+                        }
+                    }
+                    
+                    // Gerar prêmio
+                    const prizeValue = winners > 0 
+                        ? 1000000 + Math.random() * 50000000
+                        : 0;
+                    
+                    const prize = winners > 0 
+                        ? `R$ ${prizeValue.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
+                        : "Acumulou";
+                    
+                    contests.push({
+                        contest: totalContests - i + 1,
+                        date: contestDate.toLocaleDateString('pt-BR'),
+                        numbers: [...drawnNumbers],
+                        winners: winners,
+                        prize: prize,
+                        prizeValue: prizeValue,
+                        winnersDetails: winnersDetails
+                    });
+                }
+                
+                lotto.contests = contests;
+                lotto.frequency = baseFrequency;
+            }
+            
+            // Salvar casas lotéricas globalmente
+            window.lotteryHouses = [];
+            for (const key in lotteryHousesByCity) {
+                window.lotteryHouses.push(...lotteryHousesByCity[key]);
+            }
+            
+            // Atualizar a data de atualização
+            document.getElementById('update-date').textContent = today.toLocaleDateString('pt-BR');
+        }
+
+        // Gerar tipo de bilhete aleatório
+        function generateRandomTicketType() {
+            const types = [
+                "Aposta simples", "Aposta múltipla", "Surpresinha", "Aposta em grupo",
+                "Aposta por desdobramento", "Aposta com números pessoais"
+            ];
+            return types[Math.floor(Math.random() * types.length)];
+        }
+
+        // Gerar canal de aposta aleatório
+        function generateRandomTicketChannel() {
+            const channels = ["Lotérica física", "Aplicativo CAIXA", "Site CAIXA", "Revendedor autorizado"];
+            return channels[Math.floor(Math.random() * channels.length)];
+        }
+
+        // Inicializar dados
+        document.addEventListener('DOMContentLoaded', function() {
+            generateMockData();
+            setupEventListeners();
+            loadInitialData();
+        });
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remover classe active de todas as tabs
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Adicionar classe active à tab clicada
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Botão de busca
+            document.getElementById('search-button').addEventListener('click', loadContests);
+            
+            // Botão de atualizar estatísticas
+            document.getElementById('update-stats').addEventListener('click', loadStatistics);
+            
+            // Botão de carregar ganhadores por estado
+            document.getElementById('load-winners').addEventListener('click', loadWinnersByState);
+            
+            // Botão de carregar casas lotéricas
+            document.getElementById('load-houses').addEventListener('click', loadLotteryHouses);
+            
+            // Botão de gerar jogos
+            document.getElementById('generate-games').addEventListener('click', generateGames);
+            
+            // Carregar concursos ao mudar o tipo de loteria
+            document.getElementById('lottery-type').addEventListener('change', loadContests);
+            document.getElementById('contest-quantity').addEventListener('change', loadContests);
+            
+            // Carregar estatísticas ao mudar o tipo de loteria
+            document.getElementById('stats-lottery-type').addEventListener('change', loadStatistics);
+            document.getElementById('stats-period').addEventListener('change', loadStatistics);
+        }
+
+        // Carregar dados iniciais
+        function loadInitialData() {
+            loadContests();
+            loadStatistics();
+        }
+
+        // Carregar concursos
+        function loadContests() {
+            const lotteryType = document.getElementById('lottery-type').value;
+            const quantity = parseInt(document.getElementById('contest-quantity').value);
+            const specificContest = document.getElementById('specific-contest').value;
+            const lottery = lotteryData[lotteryType];
+            
+            let contestsToShow = [...lottery.contests].reverse(); // Do mais recente para o mais antigo
+            
+            // Filtrar por concurso específico se fornecido
+            if (specificContest) {
+                contestsToShow = contestsToShow.filter(c => c.contest == specificContest);
+                if (contestsToShow.length === 0) {
+                    alert(`Concurso ${specificContest} não encontrado para ${lottery.name}.`);
+                    return;
+                }
+            } else {
+                // Pegar apenas a quantidade solicitada
+                contestsToShow = contestsToShow.slice(0, quantity);
+            }
+            
+            // Gerar HTML da tabela
+            const resultsBody = document.getElementById('results-body');
+            resultsBody.innerHTML = '';
+            
+            contestsToShow.forEach(contest => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-contest', contest.contest);
+                
+                // Números como bolinhas
+                const numbersHTML = contest.numbers.map(num => 
+                    `<div class="number-ball ${lottery.colorClass}">${num}</div>`
+                ).join('');
+                
+                // Descrição dos ganhadores
+                let winnersDescription = '';
+                if (contest.winners > 0) {
+                    winnersDescription = `${contest.winners} ganhador(es)`;
+                } else {
+                    winnersDescription = 'Nenhum ganhador';
+                }
+                
+                row.innerHTML = `
+                    <td>${contest.contest}</td>
+                    <td>${contest.date}</td>
+                    <td>${numbersHTML}</td>
+                    <td>${winnersDescription}</td>
+                    <td>${contest.prize}</td>
+                    <td>
+                        <button class="btn-small view-winners" data-contest="${contest.contest}">
+                            <i class="fas fa-eye"></i> Detalhes
+                        </button>
+                    </td>
+                `;
+                
+                resultsBody.appendChild(row);
+            });
+            
+            // Adicionar event listeners aos botões de detalhes
+            document.querySelectorAll('.view-winners').forEach(button => {
+                button.addEventListener('click', function() {
+                    const contestNum = parseInt(this.getAttribute('data-contest'));
+                    showWinnersDetails(lotteryType, contestNum);
+                });
+            });
+        }
+
+        // Mostrar detalhes dos ganhadores
+        function showWinnersDetails(lotteryType, contestNum) {
+            const lottery = lotteryData[lotteryType];
+            const contest = lottery.contests.find(c => c.contest === contestNum);
+            
+            const container = document.getElementById('winners-details-container');
+            
+            // Remover detalhes anteriores
+            const existingDetails = document.querySelector('.winners-details.show');
+            if (existingDetails) {
+                existingDetails.classList.remove('show');
+                setTimeout(() => {
+                    if (!existingDetails.classList.contains('show')) {
+                        existingDetails.remove();
+                    }
+                }, 300);
+            }
+            
+            if (!contest) {
+                container.innerHTML = '<div class="winners-details show">Concurso não encontrado.</div>';
+                return;
+            }
+            
+            let detailsHTML = '';
+            
+            if (contest.winners > 0 && contest.winnersDetails.length > 0) {
+                detailsHTML = `
+                    <div class="winners-details show">
+                        <div class="winners-title">
+                            <i class="fas fa-trophy"></i>
+                            <span>Detalhes dos Ganhadores - Concurso ${contest.contest} (${contest.date}) - ${lottery.name}</span>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem; background-color: #e8f5e9; padding: 1rem; border-radius: var(--border-radius);">
+                            <h4 style="color: #2e7d32; margin-bottom: 0.5rem;"><i class="fas fa-info-circle"></i> Informações do Concurso</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                                <div>
+                                    <strong>Números sorteados:</strong><br>
+                                    ${contest.numbers.map(num => `<div class="number-ball ${lottery.colorClass}" style="display: inline-block; margin: 2px;">${num}</div>`).join('')}
+                                </div>
+                                <div>
+                                    <strong>Total arrecadado:</strong><br>
+                                    R$ ${(contest.prizeValue * 3).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                </div>
+                                <div>
+                                    <strong>Valor distribuído:</strong><br>
+                                    R$ ${(contest.prizeValue).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="color: var(--primary); margin-bottom: 1rem;">Detalhes dos Ganhadores</h3>
+                        
+                        <div class="winners-grid">
+                            ${contest.winnersDetails.map(winner => `
+                                <div class="winner-card prize">
+                                    <h4>Ganhador ${winner.id}</h4>
+                                    <div class="winner-location">
+                                        <i class="fas fa-map-marker-alt"></i> ${winner.city} - ${winner.state}
+                                    </div>
+                                    <div class="winner-prize">
+                                        <i class="fas fa-money-bill-wave"></i> R$ ${winner.prize.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                    </div>
+                                    
+                                    <div style="margin: 0.75rem 0; font-size: 0.9rem;">
+                                        <div><strong>Tipo de aposta:</strong> ${winner.ticketType}</div>
+                                        <div><strong>Canal de aposta:</strong> ${winner.ticketChannel}</div>
+                                    </div>
+                                    
+                                    <div class="lottery-house-info">
+                                        <div class="house-name">
+                                            <i class="fas fa-store"></i> ${winner.lotteryHouse.name}
+                                        </div>
+                                        <div class="house-address">
+                                            <i class="fas fa-map"></i> ${winner.lotteryHouse.address}<br>
+                                            ${winner.lotteryHouse.city} - ${winner.lotteryHouse.state}
+                                        </div>
+                                        <div class="house-contact">
+                                            <i class="fas fa-phone"></i> ${winner.lotteryHouse.phone}
+                                        </div>
+                                        <div class="house-contact">
+                                            <i class="fas fa-id-card"></i> CNPJ: ${winner.lotteryHouse.cnpj}
+                                        </div>
+                                        <div class="house-contact">
+                                            <i class="fas fa-hashtag"></i> Código: ${winner.lotteryHouse.id}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem; padding: 1rem; background-color: #fff3cd; border-radius: var(--border-radius); color: #856404;">
+                            <strong><i class="fas fa-exclamation-triangle"></i> Importante:</strong> 
+                            As informações das casas lotéricas são simuladas para fins demonstrativos. 
+                            Em casos reais, a CAIXA divulga os dados das casas lotéricas onde as apostas premiadas foram registradas.
+                        </div>
+                    </div>
+                `;
+            } else {
+                detailsHTML = `
+                    <div class="winners-details show">
+                        <div class="winners-title">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Concurso ${contest.contest} (${contest.date}) - ${lottery.name}</span>
+                        </div>
+                        <div class="no-winners">
+                            <i class="fas fa-money-bill-wave fa-2x" style="color: #ccc; margin-bottom: 1rem;"></i>
+                            <h3>Não houve ganhadores neste concurso</h3>
+                            <p>O prêmio acumulou para o próximo concurso.</p>
+                            <div style="margin-top: 1rem; background-color: #f5f5f5; padding: 1rem; border-radius: var(--border-radius);">
+                                <strong>Prêmio acumulado:</strong> R$ ${(contest.prizeValue * 1.5).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = detailsHTML;
+            
+            // Scroll para os detalhes
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Carregar estatísticas
+        function loadStatistics() {
+            const lotteryType = document.getElementById('stats-lottery-type').value;
+            const period = document.getElementById('stats-period').value;
+            const lottery = lotteryData[lotteryType];
+            
+            // Calcular frequência baseada no período
+            let contestsToAnalyze = [...lottery.contests];
+            
+            if (period !== 'all') {
+                const periodNum = parseInt(period);
+                contestsToAnalyze = contestsToAnalyze.slice(-periodNum);
+            }
+            
+            // Calcular frequência dos números
+            const frequency = {};
+            for (let i = 1; i <= lottery.maxNumber; i++) {
+                frequency[i] = 0;
+            }
+            
+            contestsToAnalyze.forEach(contest => {
+                contest.numbers.forEach(num => {
+                    frequency[num]++;
+                });
+            });
+            
+            // Converter para array e ordenar por frequência
+            const frequencyArray = Object.keys(frequency).map(num => ({
+                number: parseInt(num),
+                count: frequency[num]
+            }));
+            
+            frequencyArray.sort((a, b) => b.count - a.count);
+            
+            // Pegar top 15 e bottom 15
+            const top15 = frequencyArray.slice(0, 15);
+            const bottom15 = frequencyArray.slice(-15).reverse();
+            
+            // Calcular estatísticas gerais
+            const totalDraws = contestsToAnalyze.length;
+            const avgFrequency = frequencyArray.reduce((sum, item) => sum + item.count, 0) / lottery.maxNumber;
+            
+            // Gerar HTML das estatísticas
+            const statsGrid = document.querySelector('.stats-grid');
+            statsGrid.innerHTML = '';
+            
+            // Card 1: Top 15 números mais sorteados
+            const topCard = document.createElement('div');
+            topCard.className = 'stat-card';
+            topCard.innerHTML = `
+                <div class="stat-title">
+                    <i class="fas fa-trophy"></i>
+                    <span>Top 15 Números Mais Sorteados</span>
+                </div>
+                <ul class="frequency-list">
+                    ${top15.map(item => `
+                        <li class="frequency-item">
+                            <div class="frequency-number">
+                                <div class="number-ball ${lottery.colorClass}">${item.number}</div>
+                                <span>Sorteado ${item.count} vezes</span>
+                            </div>
+                            <div class="frequency-bar" style="width: ${(item.count / top15[0].count) * 100}%"></div>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            statsGrid.appendChild(topCard);
+            
+            // Card 2: 15 números menos sorteados
+            const bottomCard = document.createElement('div');
+            bottomCard.className = 'stat-card';
+            bottomCard.innerHTML = `
+                <div class="stat-title">
+                    <i class="fas fa-hourglass-end"></i>
+                    <span>15 Números Menos Sorteados</span>
+                </div>
+                <ul class="frequency-list">
+                    ${bottom15.map(item => `
+                        <li class="frequency-item">
+                            <div class="frequency-number">
+                                <div class="number-ball ${lottery.colorClass}">${item.number}</div>
+                                <span>Sorteado ${item.count} vezes</span>
+                            </div>
+                            <div class="frequency-bar" style="width: ${(item.count / top15[0].count) * 100}%"></div>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            statsGrid.appendChild(bottomCard);
+            
+            // Card 3: Estatísticas gerais
+            const statsCard = document.createElement('div');
+            statsCard.className = 'stat-card';
+            statsCard.innerHTML = `
+                <div class="stat-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Estatísticas Gerais</span>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <p><strong>Período analisado:</strong> ${period === 'all' ? 'Todos os concursos' : `Últimos ${period} concursos`}</p>
+                    <p><strong>Total de concursos:</strong> ${totalDraws}</p>
+                    <p><strong>Média de sorteios por número:</strong> ${avgFrequency.toFixed(2)}</p>
+                    <p><strong>Número mais sorteado:</strong> 
+                        <div class="number-ball ${lottery.colorClass}" style="display: inline-block; vertical-align: middle;">${top15[0].number}</div> 
+                        (${top15[0].count} vezes)
+                    </p>
+                    <p><strong>Número menos sorteado:</strong> 
+                        <div class="number-ball ${lottery.colorClass}" style="display: inline-block; vertical-align: middle;">${bottom15[0].number}</div> 
+                        (${bottom15[0].count} vezes)
+                    </p>
+                </div>
+            `;
+            statsGrid.appendChild(statsCard);
+        }
+
+        // Carregar dados de ganhadores por estado
+        function loadWinnersByState() {
+            const lotteryType = document.getElementById('winners-lottery-type').value;
+            const period = document.getElementById('winners-period').value;
+            const lottery = lotteryData[lotteryType];
+            
+            // Filtrar concursos pelo período
+            const today = new Date();
+            const periodDays = parseInt(period);
+            const cutoffDate = new Date(today);
+            cutoffDate.setDate(cutoffDate.getDate() - periodDays);
+            
+            // Calcular ganhadores por estado
+            const stateWinners = {};
+            let totalWinners = 0;
+            let totalPrize = 0;
+            
+            // Inicializar todos os estados com zero
+            brazilianStates.forEach(state => {
+                stateWinners[state] = { count: 0, prize: 0 };
+            });
+            
+            // Contar ganhadores por estado
+            lottery.contests.forEach(contest => {
+                const contestDate = new Date(contest.date.split('/').reverse().join('-'));
+                if (contestDate >= cutoffDate) {
+                    contest.winnersDetails.forEach(winner => {
+                        const state = winner.state;
+                        if (stateWinners[state]) {
+                            stateWinners[state].count += 1;
+                            stateWinners[state].prize += winner.prize;
+                            totalWinners += 1;
+                            totalPrize += winner.prize;
+                        }
+                    });
+                }
+            });
+            
+            // Converter para array e ordenar
+            const stateArray = Object.keys(stateWinners).map(state => ({
+                state: state,
+                count: stateWinners[state].count,
+                prize: stateWinners[state].prize
+            }));
+            
+            stateArray.sort((a, b) => b.count - a.count);
+            
+            // Gerar HTML
+            const container = document.getElementById('winners-by-state');
+            container.innerHTML = '';
+            
+            // Resumo
+            const summaryCard = document.createElement('div');
+            summaryCard.className = 'card';
+            summaryCard.innerHTML = `
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Resumo do Período - ${lottery.name}</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="background-color: #e3f2fd; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #1565c0; margin-bottom: 0.5rem;">Total de Ganhadores</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">${totalWinners}</p>
+                    </div>
+                    <div style="background-color: #e8f5e9; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #2e7d32; margin-bottom: 0.5rem;">Prêmio Total</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">R$ ${totalPrize.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                    </div>
+                    <div style="background-color: #fff3e0; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #ef6c00; margin-bottom: 0.5rem;">Estados com Ganhadores</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">${stateArray.filter(s => s.count > 0).length}</p>
+                    </div>
+                    <div style="background-color: #fce4ec; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #ad1457; margin-bottom: 0.5rem;">Média por Ganhador</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">R$ ${totalWinners > 0 ? (totalPrize / totalWinners).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0,00'}</p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(summaryCard);
+            
+            // Tabela de estados
+            const tableCard = document.createElement('div');
+            tableCard.className = 'card';
+            tableCard.style.marginTop = '1.5rem';
+            tableCard.innerHTML = `
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Ganhadores por Estado</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Ganhadores</th>
+                                <th>% do Total</th>
+                                <th>Prêmio Total</th>
+                                <th>Prêmio Médio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${stateArray.filter(s => s.count > 0).map(state => `
+                                <tr>
+                                    <td><strong>${state.state}</strong></td>
+                                    <td>${state.count}</td>
+                                    <td>${totalWinners > 0 ? ((state.count / totalWinners) * 100).toFixed(1) : 0}%</td>
+                                    <td>R$ ${state.prize.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                                    <td>R$ ${state.count > 0 ? (state.prize / state.count).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0,00'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                ${stateArray.filter(s => s.count > 0).length === 0 ? 
+                    '<div class="no-winners" style="margin: 2rem 0;"><p>Nenhum ganhador encontrado no período selecionado.</p></div>' : ''}
+            `;
+            container.appendChild(tableCard);
+        }
+
+        // Carregar casas lotéricas
+        function loadLotteryHouses() {
+            const lotteryType = document.getElementById('houses-lottery-type').value;
+            const period = document.getElementById('houses-period').value;
+            
+            // Filtrar casas com base no período
+            let housesToShow = [...window.lotteryHouses];
+            
+            // Filtrar por período (baseado na última vitória)
+            if (period !== 'all') {
+                const periodDays = parseInt(period);
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - periodDays);
+                
+                housesToShow = housesToShow.filter(house => {
+                    if (!house.lastWin) return false;
+                    const lastWinDate = new Date(house.lastWin);
+                    return lastWinDate >= cutoffDate;
+                });
+            }
+            
+            // Ordenar por número de vitórias
+            housesToShow.sort((a, b) => b.wins - a.wins);
+            
+            // Pegar as top 20 casas
+            housesToShow = housesToShow.slice(0, 20);
+            
+            // Gerar HTML
+            const container = document.getElementById('lottery-houses-results');
+            container.innerHTML = '';
+            
+            if (housesToShow.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="no-winners">
+                            <i class="fas fa-store fa-2x" style="color: #ccc; margin-bottom: 1rem;"></i>
+                            <h3>Nenhuma casa lotérica encontrada</h3>
+                            <p>Não foram encontradas casas lotéricas com ganhadores no período selecionado.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const housesContainer = document.createElement('div');
+            housesContainer.className = 'lottery-houses-container';
+            
+            housesToShow.forEach(house => {
+                const houseCard = document.createElement('div');
+                houseCard.className = 'house-card';
+                
+                houseCard.innerHTML = `
+                    <div class="house-header">
+                        <div>
+                            <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">${house.name}</h3>
+                            <div class="house-id">${house.id}</div>
+                        </div>
+                        <div class="house-wins">${house.wins} ${house.wins === 1 ? 'vitória' : 'vitórias'}</div>
+                    </div>
+                    
+                    <div class="house-address" style="margin-bottom: 1rem;">
+                        <i class="fas fa-map-marker-alt"></i> ${house.address}<br>
+                        ${house.city} - ${house.state}
+                    </div>
+                    
+                    <div class="house-contact" style="margin-bottom: 1rem;">
+                        <i class="fas fa-phone"></i> ${house.phone}
+                    </div>
+                    
+                    <div class="house-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${house.wins}</div>
+                            <div class="stat-label">Vitórias</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">R$ ${(house.totalPrize / 1000000).toFixed(1)}M</div>
+                            <div class="stat-label">Prêmios</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${house.firstWin ? new Date(house.firstWin).getFullYear() : 'N/A'}</div>
+                            <div class="stat-label">Primeira</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-id-card"></i> CNPJ: ${house.cnpj}
+                    </div>
+                `;
+                
+                housesContainer.appendChild(houseCard);
+            });
+            
+            container.appendChild(housesContainer);
+            
+            // Adicionar resumo
+            const summaryCard = document.createElement('div');
+            summaryCard.className = 'card';
+            summaryCard.style.marginTop = '1.5rem';
+            
+            const totalWins = housesToShow.reduce((sum, house) => sum + house.wins, 0);
+            const totalPrize = housesToShow.reduce((sum, house) => sum + house.totalPrize, 0);
+            const avgPrizePerWin = totalWins > 0 ? totalPrize / totalWins : 0;
+            
+            summaryCard.innerHTML = `
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Resumo das Top ${housesToShow.length} Casas Lotéricas</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="background-color: #e3f2fd; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #1565c0; margin-bottom: 0.5rem;">Total de Vitórias</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">${totalWins}</p>
+                    </div>
+                    <div style="background-color: #e8f5e9; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #2e7d32; margin-bottom: 0.5rem;">Prêmio Total</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">R$ ${(totalPrize / 1000000).toFixed(2)}M</p>
+                    </div>
+                    <div style="background-color: #fff3e0; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #ef6c00; margin-bottom: 0.5rem;">Média por Vitória</h4>
+                        <p style="font-size: 1.5rem; font-weight: bold;">R$ ${avgPrizePerWin.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                    </div>
+                    <div style="background-color: #fce4ec; padding: 1rem; border-radius: var(--border-radius);">
+                        <h4 style="color: #ad1457; margin-bottom: 0.5rem;">Casa Mais Vitoriosa</h4>
+                        <p style="font-size: 1.2rem; font-weight: bold;">${housesToShow[0].name}</p>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(summaryCard);
+        }
+
+        // Gerar jogos
+        function generateGames() {
+            const lotteryType = document.getElementById('gen-lottery-type').value;
+            const quantity = parseInt(document.getElementById('game-quantity').value);
+            const strategy = document.getElementById('gen-strategy').value;
+            const lottery = lotteryData[lotteryType];
+            
+            // Calcular frequência dos números
+            const frequency = {};
+            for (let i = 1; i <= lottery.maxNumber; i++) {
+                frequency[i] = 0;
+            }
+            
+            lottery.contests.forEach(contest => {
+                contest.numbers.forEach(num => {
+                    frequency[num]++;
+                });
+            });
+            
+            // Converter para array e ordenar por frequência
+            const frequencyArray = Object.keys(frequency).map(num => ({
+                number: parseInt(num),
+                count: frequency[num]
+            }));
+            
+            frequencyArray.sort((a, b) => b.count - a.count);
+            
+            // Gerar jogos baseados na estratégia
+            const games = [];
+            
+            for (let i = 0; i < quantity; i++) {
+                let gameNumbers = [];
+                
+                if (strategy === 'frequent') {
+                    // Pegar números mais frequentes (com alguma aleatoriedade)
+                    const topNumbers = frequencyArray.slice(0, 30).map(item => item.number);
+                    gameNumbers = getRandomSubset(topNumbers, lottery.numbersPerGame);
+                } else if (strategy === 'less-frequent') {
+                    // Pegar números menos frequentes (com alguma aleatoriedade)
+                    const bottomNumbers = frequencyArray.slice(-30).map(item => item.number);
+                    gameNumbers = getRandomSubset(bottomNumbers, lottery.numbersPerGame);
+                } else if (strategy === 'mixed') {
+                    // Mistura de números frequentes e raros
+                    const topNumbers = frequencyArray.slice(0, 20).map(item => item.number);
+                    const bottomNumbers = frequencyArray.slice(-20).map(item => item.number);
+                    const mixedPool = [...topNumbers, ...bottomNumbers];
+                    gameNumbers = getRandomSubset(mixedPool, lottery.numbersPerGame);
+                } else {
+                    // Aleatório puro
+                    const allNumbers = Array.from({length: lottery.maxNumber}, (_, i) => i + 1);
+                    gameNumbers = getRandomSubset(allNumbers, lottery.numbersPerGame);
+                }
+                
+                // Ordenar números
+                gameNumbers.sort((a, b) => a - b);
+                games.push(gameNumbers);
+            }
+            
+            // Exibir jogos gerados
+            const gamesContainer = document.getElementById('generated-games');
+            gamesContainer.innerHTML = `
+                <h3 style="margin-top: 1.5rem; color: var(--primary);">${quantity} Jogo(s) Gerado(s) para ${lottery.name}</h3>
+                <div class="games-container">
+                    ${games.map((game, index) => `
+                        <div class="game-card">
+                            <h4 style="margin-bottom: 1rem; color: var(--primary-dark);">Jogo ${index + 1}</h4>
+                            <div>
+                                ${game.map(num => `<div class="number-ball ${lottery.colorClass}" style="display: inline-block; margin: 5px;">${num}</div>`).join('')}
+                            </div>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                                ${getStrategyDescription(strategy)}
+                            </p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 2rem; padding: 1rem; background-color: #fff3cd; border-radius: var(--border-radius); color: #856404;">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Importante:</strong> 
+                    Estes jogos foram gerados aleatoriamente com base em estatísticas históricas. 
+                    Não garantimos qualquer resultado e recomendamos jogar com responsabilidade.
+                </div>
+            `;
+        }
+
+        // Função auxiliar para pegar um subconjunto aleatório
+        function getRandomSubset(array, size) {
+            const shuffled = [...array].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, size);
+        }
+
+        // Descrição da estratégia
+        function getStrategyDescription(strategy) {
+            const descriptions = {
+                'frequent': 'Baseado nos números mais sorteados',
+                'less-frequent': 'Baseado nos números menos sorteados',
+                'mixed': 'Mistura de números frequentes e raros',
+                'random': 'Aleatório puro'
+            };
+            return descriptions[strategy] || '';
+        }
+    </script>
+</body>
+</html>
